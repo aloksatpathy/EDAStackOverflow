@@ -9,7 +9,8 @@ CREATE TABLE #votesDown(PostId int, VoteTypeIdCnt bigint)
 INSERT INTO #votesDown SELECT PostId, Count(*) as VoteTypeIdCnt FROM Votes WHERE VoteTypeId=3 GROUP BY PostId
 
 
-select top 50
+select
+AP.Id,
 AP.Score as a_score, 
 AP.Body as a_body,
 AP.ViewCount as a_num_views,
@@ -91,14 +92,15 @@ from
 Posts as AP inner join
 Users as AU on AP.OwnerUserId=AU.Id left join
 Posts as QP on AP.ParentId=QP.Id inner join
-Users as QU on QP.OwnerUserId=QU.Id inner join
-#votesUp as AVU on AVU.PostId=AP.Id inner join
-#votesDown as AVD on AVD.PostId=AP.Id inner join
-#votesUp as QVU on QVU.PostId=QP.Id inner join
+Users as QU on QP.OwnerUserId=QU.Id left outer join
+#votesUp as AVU on AVU.PostId=AP.Id left outer join
+#votesDown as AVD on AVD.PostId=AP.Id left outer join
+#votesUp as QVU on QVU.PostId=QP.Id left outer join
 #votesDown as QVD on QVD.PostId=QP.Id
 
 
 
 
 where
-AP.PostTypeId=2
+AP.PostTypeId=2 and
+AP.Id>40800000
