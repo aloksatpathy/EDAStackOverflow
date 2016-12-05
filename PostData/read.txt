@@ -1,1 +1,24 @@
-this contains 500,000 rows data purely for posts. on various analysis only certain posts will be anayzed
+Select count(*)
+from Posts where id in (select Posts.id from Posts 
+    where Posts.PostTypeid = 1 
+    and Posts.commentCount>0
+    and Posts.CreationDate > '2016-01-01 00:00:00'
+    and (Posts.Tags like '%<python>%' or Tags like '%<java>%' 
+    or Tags like '%<javascript>%' or Tags like '%<c++>%')
+UNION
+select P2.id 
+  from Posts P2 
+  where P2.posttypeid = 2 
+  and Posts.commentCount>0
+  and P2.CreationDate > '2016-01-01 00:00:00'
+  and P2.parentid 
+  in 
+  (select P1.id 
+      from Posts P1 
+      where P1.CreationDate > '2016-01-01 00:00:00'
+      and (Posts.Tags like '%<python>%' or Tags like '%<java>%' 
+      or Tags like '%<javascript>%' or Tags like '%<c++>%')
+    ))
+
+This will give 807202 rows
+
