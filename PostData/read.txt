@@ -1,4 +1,6 @@
-Select count(*)
+Select Posts.Id, Posts.PostTypeId, Posts.ParentId, 
+Posts.Score, Posts.ViewCount, Posts.Tags, 
+Posts.AnswerCount, Posts.CommentCount, Posts.FavoriteCount
 from Posts where id in (select Posts.id from Posts 
     where Posts.PostTypeid = 1 
     and Posts.commentCount>0
