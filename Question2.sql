@@ -1,13 +1,8 @@
 CREATE TABLE #votesUp(PostId int, VoteTypeIdCnt bigint)
-
 INSERT INTO #votesUp SELECT PostId, Count(*) as VoteTypeIdCnt FROM Votes WHERE VoteTypeId=2 GROUP BY PostId
 
-
-
 CREATE TABLE #votesDown(PostId int, VoteTypeIdCnt bigint)
-
 INSERT INTO #votesDown SELECT PostId, Count(*) as VoteTypeIdCnt FROM Votes WHERE VoteTypeId=3 GROUP BY PostId
-
 
 select
 AP.Id,
@@ -40,9 +35,6 @@ CASE WHEN LTRIM(RTRIM(AU.AboutMe)) = '' OR AU.AboutMe IS NULL THEN 0 ELSE 1 END 
 AU.Views as a_owner_views,
 AU.UpVotes as a_owner_upvotes,
 AU.DownVotes as a_owner_downvotes,
-
-
-
 
 QP.Score as q_score,
 QP.Body as q_body,
@@ -85,9 +77,6 @@ AVD.VoteTypeIdCnt as a_votes_down,
 QVU.VoteTypeIdCnt as q_votes_up,
 QVD.VoteTypeIdCnt as q_votes_down
 
-
-
-
 from 
 Posts as AP inner join
 Users as AU on AP.OwnerUserId=AU.Id left join
@@ -98,9 +87,7 @@ Users as QU on QP.OwnerUserId=QU.Id left outer join
 #votesUp as QVU on QVU.PostId=QP.Id left outer join
 #votesDown as QVD on QVD.PostId=QP.Id
 
-
-
-
 where
 AP.PostTypeId=2 and
-AP.Id>40800000
+QP.AnswerCount>4 and
+AP.Id>39000000
