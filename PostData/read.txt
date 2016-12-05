@@ -24,3 +24,70 @@ select P2.id
 
 This will give 807202 rows
 
+
+select count(*) 
+from Comments, Users, Posts 
+where Comments.UserId = Users.Id 
+and Posts.Id = Comments.PostId 
+and Posts.id 
+in
+(select Posts.id from Posts 
+    where Posts.PostTypeid = 1 
+    and Posts.commentCount>0
+    and Posts.CreationDate > '2016-01-01 00:00:00'
+    and (Posts.Tags like '%<python>%' or Tags like '%<java>%' 
+    or Tags like '%<javascript>%' or Tags like '%<c++>%')
+UNION
+select P2.id 
+  from Posts P2 
+  where P2.posttypeid = 2 
+  and Posts.commentCount>0
+  and P2.CreationDate > '2016-01-01 00:00:00'
+  and P2.parentid 
+  in 
+  (select P1.id 
+      from Posts P1 
+      where P1.CreationDate > '2016-01-01 00:00:00'
+      and (Posts.Tags like '%<python>%' or Tags like '%<java>%' 
+      or Tags like '%<javascript>%' or Tags like '%<c++>%')
+   )
+)
+
+This query gives 2,680,289 rows.
+
+Intermittent Query:
+
+select Comments.Id as CommentId, Comments.PostId as PostId, 
+Posts.PostTypeId as PostTypeId, Comments.Score as CommentScore, 
+Comments.Text as CommentText, Comments.CreationDate as CommentCrDt, 
+Posts.Score as PostScore,
+Posts.CreationDate as PostCrDt, Posts.AnswerCount as PostAnswerCount, 
+Posts.CommentCount as CommentCount, Users.Id as UserId, 
+Users.Reputation as UserReputation, Users.Views as UserViews, 
+Users.UpVotes as UserUpVotes, Users.DownVotes as UserDownVotes 
+from Comments, Users, Posts 
+where Comments.UserId = Users.Id 
+and Posts.Id = Comments.PostId 
+and Posts.id 
+in
+(select Posts.id from Posts 
+    where Posts.PostTypeid = 1 
+    and Posts.commentCount>0
+    and Posts.CreationDate > '2016-01-01 00:00:00'
+    and (Posts.Tags like '%<python>%' or Tags like '%<java>%' 
+    or Tags like '%<javascript>%' or Tags like '%<c++>%')
+UNION
+select P2.id 
+  from Posts P2 
+  where P2.posttypeid = 2 
+  and Posts.commentCount>0
+  and P2.CreationDate > '2016-01-01 00:00:00'
+  and P2.parentid 
+  in 
+  (select P1.id 
+      from Posts P1 
+      where P1.CreationDate > '2016-01-01 00:00:00'
+      and (Posts.Tags like '%<python>%' or Tags like '%<java>%' 
+      or Tags like '%<javascript>%' or Tags like '%<c++>%')
+   )
+)
